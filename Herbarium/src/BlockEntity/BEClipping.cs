@@ -100,25 +100,41 @@ namespace herbarium
         private void DoGrow(string state){ //this contains the worst code ever written, please fix
             ICoreServerAPI sapi = Api as ICoreServerAPI;
 
-            if(state == "alive")
+            if(state == "alive" && bushCode != null)
             {
-                Block newBushBlock = Api.World.GetBlock(AssetLocation.Create(bushCode));
+                try
+                {
+                    Block newBushBlock = Api.World.GetBlock(AssetLocation.Create(bushCode));
                 
-                if (newBushBlock is null) return;
+                    if (newBushBlock is null) return;
 
-                Api.World.BlockAccessor.SetBlock(newBushBlock.BlockId, Pos);
+                    Api.World.BlockAccessor.SetBlock(newBushBlock.BlockId, Pos);
+                }
+                catch (Exception)
+                {
+                    //Api.World.Logger.Error(e.Message);
+                    ;
+                }
             }
 
             if(state == "dead")
             {
-                Block deadClippingBlock;
+                try
+                {
+                    Block deadClippingBlock;
 
-                bushType = this.Block.Variant["type"].ToString();
+                    bushType = this.Block.Variant["type"].ToString();
 
-                deadClippingBlock = Api.World.GetBlock(AssetLocation.Create(this.Block.Code.FirstCodePart() + bushType + "-dead", block.Code.Domain));
-                if (deadClippingBlock is null) return;
+                    deadClippingBlock = Api.World.GetBlock(AssetLocation.Create(this.Block.Code.FirstCodePart() + bushType + "-dead", block.Code.Domain));
+                    if (deadClippingBlock is null) return;
 
-                Api.World.BlockAccessor.SetBlock(deadClippingBlock.BlockId, Pos);
+                    Api.World.BlockAccessor.SetBlock(deadClippingBlock.BlockId, Pos);
+                }
+                catch (Exception)
+                {
+                    //Api.World.Logger.Error(e.Message);
+                    ;
+                }
             }
         }
 
